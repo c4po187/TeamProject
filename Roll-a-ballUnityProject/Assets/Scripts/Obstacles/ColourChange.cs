@@ -9,12 +9,12 @@ public class ColourChange : MonoBehaviour {
 	void Start () {
 		switch (colour)
 		{
-		case "Red":
-			this.renderer.material.color = Color.red;
+		case "Orange":
+                this.renderer.material.color = Color.Lerp(Color.yellow, Color.red, 0.5f);
 			break;
 
-		case "Blue":
-			this.renderer.material.color = Color.blue;
+		case "Candy":
+            this.renderer.material.color = Color.Lerp(Color.magenta, Color.green, 0.3725f);
 			break;
 
 		case "Green":

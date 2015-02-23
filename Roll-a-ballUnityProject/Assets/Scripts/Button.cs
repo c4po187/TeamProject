@@ -7,6 +7,7 @@ public class Button : MonoBehaviour
 	public List<GameObject> allDoorsThisRoom;
 	GameObject thisRoom;
 	bool doorsOpen;
+    Color m_ballColour;
 
 	// Use this for initialization
 	void Start () 
@@ -16,13 +17,17 @@ public class Button : MonoBehaviour
 
 	void OnCollisionEnter(Collision other)
 	{
-		if(!doorsOpen)
-		{
-			Debug.Log ("button pressed");
-			GetDoors ();
-			OpenDoors ();
-			doorsOpen = true;
-		}
+        if (other.gameObject.tag == "Player") {
+            m_ballColour = other.gameObject.renderer.material.color;
+            //if (!doorsOpen) {
+            //    Debug.Log("button pressed");
+            //    GetDoors();
+            //    OpenDoors();
+            //    doorsOpen = true;
+            //}
+            GetDoors();
+            OpenDoors();
+        }
 	}
 
 	void GetDoors()
@@ -44,9 +49,14 @@ public class Button : MonoBehaviour
 	{
 		foreach (GameObject door in allDoorsThisRoom)
 		{
-			Vector3 open = door.transform.position;
-			open.y += 3;
-			door.transform.position += open;
+			Vector3 open; 
+
+            if (door.renderer.material.color == m_ballColour) {
+                open = door.transform.position;
+                open.y += 3;
+                door.transform.position += open;
+                //doorsOpen = false;
+            }
 		}
 	}
 }

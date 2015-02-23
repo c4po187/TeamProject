@@ -59,6 +59,7 @@
     <Compile Include="Assets\Scripts\Button.cs" />
     <Compile Include="Assets\Scripts\Main\Entry.cs" />
     <Compile Include="Assets\Scripts\Obstacles\ColourChange.cs" />
+    <Compile Include="Assets\Scripts\Obstacles\ColourSwitchParticles.cs" />
     <Compile Include="Assets\Scripts\Obstacles\GateScript.cs" />
     <Compile Include="Assets\Scripts\Obstacles\PushBlock.cs" />
     <Compile Include="Assets\Scripts\Room\Room.cs" />
