@@ -21,8 +21,8 @@ public class Controls : MonoBehaviour
 	{
 		currentSpeed = rigidbody.velocity.magnitude;
 
-		if (!IsGrounded ())
-						Debug.Log ("in air");
+        if (!IsGrounded()) Debug.Log("Airbourne");
+        else Debug.Log("Grounded");
 
         #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         /* 

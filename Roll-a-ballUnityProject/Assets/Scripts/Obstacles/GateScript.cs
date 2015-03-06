@@ -27,10 +27,10 @@ public class GateScript : MonoBehaviour {
 	void OnCollisionEnter(Collision other) {
 		if (other.gameObject.tag == "Player") {
 			if (this.renderer.material.color == other.gameObject.renderer.material.color) {
-					this.collider.isTrigger = true;
-                    Destroy(this.gameObject);
+				this.collider.isTrigger = true;
+                Destroy(this.gameObject);
 			} else {
-					this.collider.isTrigger = false;
+				this.collider.isTrigger = false;
 			}
 		}
 	}
