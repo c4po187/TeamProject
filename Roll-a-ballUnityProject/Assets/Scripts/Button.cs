@@ -18,7 +18,7 @@ public class Button : MonoBehaviour
 	void OnCollisionEnter(Collision other)
 	{
         if (other.gameObject.tag == "Player") {
-            m_ballColour = other.gameObject.renderer.material.color;
+            m_ballColour = other.gameObject.GetComponent<Renderer>().material.color;
             //if (!doorsOpen) {
             //    Debug.Log("button pressed");
             //    GetDoors();
@@ -51,7 +51,7 @@ public class Button : MonoBehaviour
 		{
 			Vector3 open; 
 
-            if (door.renderer.material.color == m_ballColour) {
+            if (door.GetComponent<Renderer>().material.color == m_ballColour) {
                 open = door.transform.position;
                 open.y += 3;
                 door.transform.position += open;

@@ -12,39 +12,40 @@ public class Controls : MonoBehaviour
 	{
 		//Physics.gravity.Set(0.0f,-1000f,0.0f);
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
-		distToGround = collider.bounds.extents.y;
-		maxSpeed = 75f;
+		distToGround = GetComponent<Collider>().bounds.extents.y;
+		maxSpeed = 10f;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		currentSpeed = rigidbody.velocity.magnitude;
+		currentSpeed = GetComponent<Rigidbody>().velocity.magnitude;
 
-        if (!IsGrounded()) Debug.Log("Airbourne");
-        else Debug.Log("Grounded");
+        //if (!IsGrounded()) Debug.Log("Airbourne");
+        //else Debug.Log("Grounded");
 
         #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         /* 
          * Check for player keyboard input and move ball accordingly
          */
-		if (rigidbody.velocity.magnitude < maxSpeed && IsGrounded())
+        maxSpeed = 15f;
+		if (GetComponent<Rigidbody>().velocity.magnitude < maxSpeed && IsGrounded())
 		{
         	if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
 			{
-				rigidbody.AddForce(Vector3.forward * 10.0f);
+				GetComponent<Rigidbody>().AddForce(Vector3.forward * maxSpeed);
 			}
 			if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
 			{
-				rigidbody.AddForce(Vector3.back * 10.0f);
+				GetComponent<Rigidbody>().AddForce(Vector3.back * maxSpeed);
 			}
 			if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow))
 			{
-				rigidbody.AddForce(Vector3.left * 10.0f);
+				GetComponent<Rigidbody>().AddForce(Vector3.left * maxSpeed);
 			}
 			if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
 			{
-				rigidbody.AddForce(Vector3.right * 10.0f);
+				GetComponent<Rigidbody>().AddForce(Vector3.right * maxSpeed);
 			}
 		}
         #endif
@@ -75,7 +76,7 @@ public class Controls : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Pickup")
 		{
-			this.renderer.material.color = other.renderer.material.color;
+			this.GetComponent<Renderer>().material.color = other.GetComponent<Renderer>().material.color;
 			other.gameObject.SetActive(false);
 		}
 	}
@@ -93,21 +94,23 @@ public class Controls : MonoBehaviour
 		// dont want to colide with objects we are rollling on
 		if (!(relativePosition.y > 0))
 		{
-			//Debug.Log("The object is not above.");
+            
+            
+            //Debug.Log("The object is not above.");
 
-			// these shouldnt trigger collisions either
-			if (/*other.gameObject.name != "FloorTL" &&
+			
+			if (other.gameObject.name != "FloorTL" &&
 			    other.gameObject.name != "FloorBL" &&
 			    other.gameObject.name != "FloorTR" &&
-			    other.gameObject.name != "FloorBR" &&*/
-			    other.gameObject.name != "CubeSlope")
+			    other.gameObject.name != "FloorBR")
 			{
-				//Debug.Log(other.gameObject.name);
-				this.audio.Play();
+				Debug.Log(other.gameObject.name);
+				this.GetComponent<AudioSource>().Play();
 				#if UNITY_ANDROID
-				Handheld.Vibrate ();
+				Handheld.Vibrate();
 				#endif
 			}
+            
 		}
 	}
 }

@@ -15,22 +15,22 @@ public class GateScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Player") {
-			if (this.renderer.material.color == other.gameObject.renderer.material.color) {
-				this.collider.isTrigger = true;
+			if (this.GetComponent<Renderer>().material.color == other.gameObject.GetComponent<Renderer>().material.color) {
+				this.GetComponent<Collider>().isTrigger = true;
                 Destroy(this.gameObject);
 			} else {
-				this.collider.isTrigger = false;
+				this.GetComponent<Collider>().isTrigger = false;
 			}
 		}
 	}
 
 	void OnCollisionEnter(Collision other) {
 		if (other.gameObject.tag == "Player") {
-			if (this.renderer.material.color == other.gameObject.renderer.material.color) {
-				this.collider.isTrigger = true;
+			if (this.GetComponent<Renderer>().material.color == other.gameObject.GetComponent<Renderer>().material.color) {
+				this.GetComponent<Collider>().isTrigger = true;
                 Destroy(this.gameObject);
 			} else {
-				this.collider.isTrigger = false;
+				this.GetComponent<Collider>().isTrigger = false;
 			}
 		}
 	}

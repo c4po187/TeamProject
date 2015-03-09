@@ -1,77 +1,51 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PushBlock : MonoBehaviour {
 
-    #region Fields
-	//Added by adam
-	public float maxDistance;
-	public float minDistance;
-	private float frontLimit;
-	private float backLimit;
-	//
-    private const float m_boundsNode_A = 5f, 
-                        m_boundsNode_B = -2f;
+    #region Private Members
+
+    private bool b_ballCollideBounds;
 
     #endregion
 
-    #region Properties
+    #region Public Members
 
-    public int MaxDistance { get; set; }
+    public float FrontBound_Z;
+    public float BackBound_Z;
 
     #endregion
 
     #region Functions
 
-    // Use this for initialization
 	void Start () {
-        //this.rigidbody.isKinematic = true;
-		//added by adam
-		backLimit = this.transform.position.z + maxDistance;
-		frontLimit = this.transform.position.z - minDistance;
-		//
+        b_ballCollideBounds = false;
 	}
-	
-	// Update is called once per frame
-	/*void Update () {
-        GameObject ballRef = GameObject.FindGameObjectWithTag("Player");
-        
-        if ((this.transform.position.z >= m_boundsNode_A && ballRef.transform.position.z < m_boundsNode_A) ||
-            (this.transform.position.z <= m_boundsNode_B && ballRef.transform.position.z > m_boundsNode_B)) {
-            this.rigidbody.isKinematic = true;
+
+    void Update() {
+        if ((this.transform.position.z >= this.FrontBound_Z || this.transform.position.z <= this.BackBound_Z) && 
+            !b_ballCollideBounds) {
+            this.GetComponent<Rigidbody>().isKinematic = true;
         }
-    }*/
-
-	//added by adam
-	void FixedUpdate()
-	{
-//		float currentPos = this.transform.position.z;
-//		if (currentPos < frontLimit && currentPos > backLimit)
-//		{
-//			this.rigidbody.isKinematic = false;
-//		}
-//		else
-//		{
-//			this.rigidbody.isKinematic = true;
-//			Debug.Log ("Stop");
-//		}
-	}
-
-	/*void OnCollisionEnter(Collision other) {
-		if (other.gameObject.tag.Equals("Player")) 
-            this.rigidbody.isKinematic = false;
-		
-	}
-
-    void OnCollisionStay(Collision other) {
-        if (other.gameObject.tag.Equals("Player")) 
-            this.rigidbody.AddForce(0f, 0f, Mathf.Pow(other.gameObject.rigidbody.velocity.z, 2f));
-        
+        else {
+            this.GetComponent<Rigidbody>().isKinematic = false;
+        }
     }
 
-    void OnCollisionExit(Collision other) {
-        this.rigidbody.isKinematic = true;
-    }*/
+    void FixedUpdate() { ; }
+
+    void OnCollisionEnter(Collision other) {
+        if (other.gameObject.tag.Equals("Player")) {
+            if (other.gameObject.transform.position.z > this.FrontBound_Z ||
+                other.gameObject.transform.position.z < this.BackBound_Z) {
+                b_ballCollideBounds = true;
+            }
+        }
+        else {
+            b_ballCollideBounds = false;
+        }
+    }
 
     #endregion
 }
