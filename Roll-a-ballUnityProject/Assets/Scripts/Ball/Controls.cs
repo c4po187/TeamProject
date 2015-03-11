@@ -7,6 +7,18 @@ public class Controls : MonoBehaviour
 	public float maxSpeed;
 	private float distToGround;
 
+    private GameObject m_currentSurface;
+    public ConstantForce GravityOffset;
+
+    /*
+    public ConstantForce GravityOffset {
+        get {
+            if (m_gravityOffset == null)
+                m_gravityOffset = this.gameObject.AddComponent<ConstantForce>();
+            return m_gravityOffset;
+        } set { m_gravityOffset = value; }
+    } 
+    */
 	// Use this for initialization
 	void Start () 
 	{
@@ -28,7 +40,7 @@ public class Controls : MonoBehaviour
         /* 
          * Check for player keyboard input and move ball accordingly
          */
-        maxSpeed = 15f;
+        maxSpeed = 20f;
 		if (GetComponent<Rigidbody>().velocity.magnitude < maxSpeed && IsGrounded())
 		{
         	if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
@@ -91,6 +103,10 @@ public class Controls : MonoBehaviour
 		var relativePosition = transform.InverseTransformPoint(contactPoint);
 		//Debug.Log ("CP= " + contactPoint + " RP= " + relativePosition);
 
+        // Check to see if we have hit the magnetic strip
+        if (other.gameObject.tag.Equals("magstrip")) 
+            m_currentSurface = other.gameObject;
+
 		// dont want to colide with objects we are rollling on
 		if (!(relativePosition.y > 0))
 		{
@@ -113,4 +129,18 @@ public class Controls : MonoBehaviour
             
 		}
 	}
+
+    void OnCollisionStay(Collision other) {
+        if (other.gameObject.Equals(m_currentSurface)) {
+            ContactPoint cp = other.contacts[0];
+            GravityOffset.force = (-1f * Physics.gravity) + (-1f * cp.normal);
+        }
+    }
+
+    void OnCollisionExit(Collision other) {
+        if (other.gameObject.Equals(m_currentSurface)) {
+            m_currentSurface = null;
+            GravityOffset.force = Vector3.zero;
+        }
+    }
 }

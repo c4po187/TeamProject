@@ -165,7 +165,7 @@ public class Entry : MonoBehaviour {
     /// </summary>
     void Update() {
         /***** DEBUG: PERFORM SWITCH *****/
-        if (Input.GetKeyDown(KeyCode.S)) {
+        if (Input.GetKeyDown(KeyCode.Home)) {
             StartShift();
         }
     }
