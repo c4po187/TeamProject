@@ -38,9 +38,9 @@ public class ColourSwitchParticles : MonoBehaviour {
 
     void OnParticleCollision(GameObject other) {
         if (other.gameObject.tag == "Player") {
-            Rigidbody body = other.rigidbody;
+            Rigidbody body = other.GetComponent<Rigidbody>();
             if (body) {
-                other.gameObject.renderer.material.color = m_colors[m_index];
+                other.gameObject.GetComponent<Renderer>().material.color = m_colors[m_index];
             }
         }
     }

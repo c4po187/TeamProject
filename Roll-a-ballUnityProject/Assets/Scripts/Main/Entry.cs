@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public enum SuperCubeState {
     Switching,
@@ -98,10 +99,19 @@ public class Entry : MonoBehaviour {
 
     private int m_switchCounter;
 
+    // Countdown params
+    private Stopwatch m_timer;
+    private const long COUNTDOWN_DURATION = 120000;
+
+    public long Countdown_ms {
+        get { return m_timer.ElapsedMilliseconds; }
+    }
+
     // Use this for initialization
     void Start() {
-
+                
         m_scState = SuperCubeState.Still;
+        m_timer = new Stopwatch();
         m_switchCounter = 0;
 
         /* 
@@ -165,7 +175,12 @@ public class Entry : MonoBehaviour {
     /// </summary>
     void Update() {
         /***** DEBUG: PERFORM SWITCH *****/
-        if (Input.GetKeyDown(KeyCode.S)) {
+        if (Input.GetKeyDown(KeyCode.Home)) {
+            StartShift();
+        }
+
+        if (this.Countdown_ms >= COUNTDOWN_DURATION) {
+            ResetTimer();
             StartShift();
         }
     }
@@ -267,7 +282,7 @@ public class Entry : MonoBehaviour {
 
         if (m_phase.Equals(SwitchPhase.Next)) {
             bool useCentral = (m_switchCounter >= 3);
-            Triple<int, int, int> nextLocation = GetRandomLocation(useCentral);
+            Triple<int, int, int> nextLocation = GetRandomLocation(ref useCentral);
             m_switcher = m_cublings[nextLocation.Item1, nextLocation.Item2, nextLocation.Item3];
             m_targetPosition = m_lastPosition;
 
@@ -286,7 +301,7 @@ public class Entry : MonoBehaviour {
     /// </summary>
     /// <returns>A Triple of integers representing a random location.</returns>
     /// <param name="enableCentral">If set to <c>true</c> enable the central cube.</param>
-    private Triple<int, int, int> GetRandomLocation(bool enableCentral) {
+    private Triple<int, int, int> GetRandomLocation(ref bool enableCentral) {
         System.Random r = new System.Random();
 
         m_lastLocation = GetCublingLocation(m_lastPosition);
@@ -317,11 +332,11 @@ public class Entry : MonoBehaviour {
             default:
                 break;
         }
-
+        
         // Run function recursively if we meet the following conditions...
         if ((!enableCentral && IsSameLocation(location, central)) ||
             IsSameLocation(location, start) || IsSameLocation(location, end) || OutOfBounds(location)) {
-            location = GetRandomLocation(enableCentral);
+            location = GetRandomLocation(ref enableCentral);
         }
 
         return location;
@@ -341,10 +356,27 @@ public class Entry : MonoBehaviour {
     /// Checks to see if the cube location is out of the bounds of the supercube matrix.
     /// </summary>
     /// <returns><c>true</c>, if location exceeds any of the boundaries, <c>false</c> otherwise.</returns>
-    /// <param name="location">Represetns the location of the cube.</param>
+    /// <param name="location">Represents the location of the cube.</param>
     private bool OutOfBounds(Triple<int, int, int> location) {
         return (location.Item1 < 0 || location.Item1 > 2 ||
                 location.Item2 < 0 || location.Item2 > 2 ||
                 location.Item3 < 0 || location.Item3 > 2);
+    }
+
+    public bool BeginShiftCountdown() {
+        if (!m_timer.IsRunning) {
+            m_timer.Start();
+            return true;
+        }
+        return false;
+    }
+
+    public void ResetTimer() {
+        m_timer.Stop();
+        m_timer.Reset();
+    }
+
+    public void StopTimer() {
+        m_timer.Stop();
     }
 }
