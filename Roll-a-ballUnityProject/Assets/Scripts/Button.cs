@@ -6,7 +6,7 @@ public class Button : MonoBehaviour
 {
 	public List<GameObject> allDoorsThisRoom;
 	GameObject thisRoom;
-	bool doorsOpen;
+    bool doorsOpen;
     Color m_ballColour;
 
 	// Use this for initialization
@@ -17,22 +17,28 @@ public class Button : MonoBehaviour
 
 	void OnCollisionEnter(Collision other)
 	{
-        if (other.gameObject.tag == "Player") {
-            m_ballColour = other.gameObject.GetComponent<Renderer>().material.color;
-            //if (!doorsOpen) {
-            //    Debug.Log("button pressed");
-            //    GetDoors();
-            //    OpenDoors();
-            //    doorsOpen = true;
-            //}
-            GetDoors();
-            OpenDoors();
+        if (other.gameObject.tag.Equals("Player")) {
+            switch (this.tag) { 
+                case "btnDoor":
+                    m_ballColour = other.gameObject.GetComponent<Renderer>().material.color;
+                    GetDoors();
+                    OpenDoors();
+                    break;
+                case "btnMagstrip":
+                    GameObject.FindGameObjectWithTag("MagStrip")
+                        .SendMessage("ModifyPolarity", Polarity.Positive);
+                    break;
+                default:
+                    break;
+            }
+            
         }
 	}
 
 	void GetDoors()
 	{
-		thisRoom = this.transform.parent.parent.gameObject;
+        // Added another level of parent as it is now within a new hierarchy
+        thisRoom = this.transform.parent.parent.parent.gameObject;  
 		Debug.Log (thisRoom.name);
 		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallT/Door/DoorLeft").gameObject);
 		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallB/Door/DoorLeft").gameObject);

@@ -23,17 +23,16 @@ public class PushBlock : MonoBehaviour {
         b_ballCollideBounds = false;
 	}
 
-    void Update() {
-        if ((this.transform.position.z >= this.FrontBound_Z || this.transform.position.z <= this.BackBound_Z) && 
+    void Update() { ; }
+
+    void FixedUpdate() {
+        if ((this.transform.position.z >= this.FrontBound_Z || this.transform.position.z <= this.BackBound_Z) &&
             !b_ballCollideBounds) {
             this.GetComponent<Rigidbody>().isKinematic = true;
-        }
-        else {
+        } else {
             this.GetComponent<Rigidbody>().isKinematic = false;
         }
     }
-
-    void FixedUpdate() { ; }
 
     void OnCollisionEnter(Collision other) {
         if (other.gameObject.tag.Equals("Player")) {
@@ -41,10 +40,14 @@ public class PushBlock : MonoBehaviour {
                 other.gameObject.transform.position.z < this.BackBound_Z) {
                 b_ballCollideBounds = true;
             }
-        }
-        else {
+        } else {
             b_ballCollideBounds = false;
         }
+    }
+
+    void OnCollisionStay(Collision other) {
+        b_ballCollideBounds = (other.gameObject.tag.Equals("Player") && 
+            other.gameObject.transform.position.y > 0.6f);
     }
 
     #endregion
