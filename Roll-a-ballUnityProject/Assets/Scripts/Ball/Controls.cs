@@ -6,22 +6,36 @@ using System.Collections;
 public enum Relativity { 
     Ground = 1,
     Wall = Ground << 1,
-    Ceiling = Ground << 2
+    Ceiling = Ground << 2,
+    Sinking = Ground << 3
 }
 
 #endregion
 
-public class Controls : MonoBehaviour 
-{
-	public float currentSpeed;
+public class Controls : MonoBehaviour {
+    
+    #region Members
+
+    public float currentSpeed;
 	public float maxSpeed;
 	private float distToGround;
 
-    private GameObject m_currentSurface;
-    public ConstantForce GravityOffset;
+    #endregion
+
+    #region Properties
 
     public Relativity BallRelativity { get; private set; }
     public Vector3 WallDirectional { get; private set; }
+    public string PreviousRoom { get; private set; }
+    public string CurrentRoom { get; private set; }
+
+    #endregion
+
+    #region Functions
+
+    /*
+     * Listeners
+     */
 
     public void Set_BallRelativity(Relativity r) {
         BallRelativity = r;
@@ -31,15 +45,22 @@ public class Controls : MonoBehaviour
         WallDirectional = v;
     }
 
+    public void Set_PreviousRoom(string pr) {
+        PreviousRoom = pr;
+    }
+
+    public void Set_CurrentRoom(string cr) {
+        CurrentRoom = cr;
+    }
+
+    public void Set_BallColour(Color color) {
+        this.GetComponent<Renderer>().material.color = color;
+    }
+
     /*
-    public ConstantForce GravityOffset {
-        get {
-            if (m_gravityOffset == null)
-                m_gravityOffset = this.gameObject.AddComponent<ConstantForce>();
-            return m_gravityOffset;
-        } set { m_gravityOffset = value; }
-    } 
-    */
+     * Initilaizers
+     */
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -49,7 +70,14 @@ public class Controls : MonoBehaviour
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 		distToGround = GetComponent<Collider>().bounds.extents.y;
 		maxSpeed = 10f;
+        
+        // DBG
+        PreviousRoom = CurrentRoom = "Room_4";
 	}
+
+    /*
+     * Logic
+     */
 
 	// Update is called once per frame
 	void Update () 
@@ -61,47 +89,49 @@ public class Controls : MonoBehaviour
 
         Debug.Log(this.transform.position.y.ToString());
 
-        #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        /* 
+        if (!BallRelativity.Equals(Relativity.Sinking)) {
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            /* 
          * Check for player keyboard input and move ball accordingly
          */
-        maxSpeed = 12.5f;
-		if (GetComponent<Rigidbody>().velocity.magnitude < maxSpeed)
-		{
-            if (isGrounded() || BallRelativity.Equals(Relativity.Wall)) {
-                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-                    GetComponent<Rigidbody>().AddForce(Vector3.forward * maxSpeed);
-                }
-                if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
-                    GetComponent<Rigidbody>().AddForce(Vector3.back * maxSpeed);
-                }
-                if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) {
-                    if (BallRelativity.Equals(Relativity.Wall)) 
-                        GetComponent<Rigidbody>().AddForce(Vector3.up * (maxSpeed * 0.5f));
-                    else
-                        GetComponent<Rigidbody>().AddForce(Vector3.left * maxSpeed);
-                }
-                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
-                    GetComponent<Rigidbody>().AddForce(Vector3.right * maxSpeed);
+            maxSpeed = 12.5f;
+            if (GetComponent<Rigidbody>().velocity.magnitude < maxSpeed) {
+                if (isGrounded() || BallRelativity.Equals(Relativity.Wall)) {
+                    if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
+                        GetComponent<Rigidbody>().AddForce(Vector3.forward * maxSpeed);
+                    }
+                    if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+                        GetComponent<Rigidbody>().AddForce(Vector3.back * maxSpeed);
+                    }
+                    if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) {
+                        if (BallRelativity.Equals(Relativity.Wall))
+                            GetComponent<Rigidbody>().AddForce(Vector3.up * (maxSpeed * 0.5f));
+                        else
+                            GetComponent<Rigidbody>().AddForce(Vector3.left * maxSpeed);
+                    }
+                    if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
+                        GetComponent<Rigidbody>().AddForce(Vector3.right * maxSpeed);
+                    }
                 }
             }
-		}
-        #endif
+#endif
 
-        #if UNITY_ANDROID
-        /*
-         * Move ball based on accelerometer values
-         */
-        Vector3 movement = new Vector3(Input.acceleration.x, 0f, Input.acceleration.y); //-y
+#if UNITY_ANDROID
+            /*
+             * Move ball based on accelerometer values
+             */
+            Vector3 movement = new Vector3(Input.acceleration.x, 0f, Input.acceleration.y); //-y
 
-//        if (movement.sqrMagnitude > 1)
-//            movement.Normalize();
+            if (movement.sqrMagnitude > 1)
+               movement.Normalize();
         
-		if (rigidbody.velocity.magnitude < maxSpeed && IsGrounded())
-		{
-        	rigidbody.AddForce(movement * 50f);
-		}
-        #endif
+		    if (rigidbody.velocity.magnitude < maxSpeed && IsGrounded())
+		    {
+        	    rigidbody.AddForce(movement * 50f);
+		    }
+#endif
+        }
 	}
 
     void FixedUpdate() {
@@ -116,12 +146,19 @@ public class Controls : MonoBehaviour
             case Relativity.Ceiling:
                 GetComponent<Rigidbody>().AddForce(Vector3.up * Physics.gravity.magnitude);
                 break;
+            case Relativity.Sinking:
+                GetComponent<Rigidbody>().AddForce(-Vector3.up * 0.75f);
+                break;
         }
     }
 
     public bool isGrounded() {
         return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
     }
+
+    /*
+     * Triggers/Collisions
+     */
 
 	//added by adam
 	void OnTriggerEnter(Collider other)
@@ -141,13 +178,6 @@ public class Controls : MonoBehaviour
 
 		Vector3 contactPoint = other.contacts[0].point;
 		var relativePosition = transform.InverseTransformPoint(contactPoint);
-		//Debug.Log ("CP= " + contactPoint + " RP= " + relativePosition);
-
-        // Check to see if we have hit the magnetic strip
-        /*
-        if (other.gameObject.tag.Equals("magstrip")) 
-            m_currentSurface = other.gameObject;
-        */
           
 		// dont want to colide with objects we are rollling on
 		if (!(relativePosition.y > 0))
@@ -170,20 +200,10 @@ public class Controls : MonoBehaviour
 			}
             
 		}
-	}
-    /*
-    void OnCollisionStay(Collision other) {
-        if (other.gameObject.Equals(m_currentSurface)) {
-            ContactPoint cp = other.contacts[0];
-            GravityOffset.force = (-1f * Physics.gravity) + (-1f * cp.normal);
-        }
     }
 
-    void OnCollisionExit(Collision other) {
-        if (other.gameObject.Equals(m_currentSurface)) {
-            m_currentSurface = null;
-            GravityOffset.force = Vector3.zero;
-        }
-    }
-     * */
+    #endregion
 }
+
+
+// END OF FILE
