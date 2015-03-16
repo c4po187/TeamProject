@@ -67,17 +67,32 @@ public class Button : MonoBehaviour
 	{
 
         GameObject[] surrounds = GameObject.FindGameObjectsWithTag("doorSurround");
+        var sList = new List<GameObject>(surrounds);
+        sList.RemoveAll(x => x.transform.root != this.transform.root);
+
         GameObject parent = null;
 
+        foreach (var s in sList) {
+            if (s.GetComponent<Renderer>().materials[0].color.Equals(m_ballColour)) {
+                parent = s.transform.parent.gameObject;
+            }
+        }
+        /*
         for (int i = 0; i < surrounds.Length; ++i) {
             if (surrounds[i].GetComponent<Renderer>().material.color.Equals(m_ballColour)) { 
                 parent = surrounds[i].transform.parent.gameObject;
             }
         }
-
+        */
         if (parent != null) {
-            parent.transform.FindChild("DoorLeft").Rotate(new Vector3(0, -90f, 0), Space.Self);
-            parent.transform.FindChild("DoorRight").Rotate(new Vector3(0, 90f, 0), Space.Self);
+            if (m_ballColour.Equals(Color.green) || m_ballColour.Equals(Color.red)) {
+                parent.transform.FindChild("DoorLeft").Rotate(new Vector3(0, -90f, 0), Space.Self);
+                parent.transform.FindChild("DoorRight").Rotate(new Vector3(0, 90f, 0), Space.Self);
+            }
+            else {
+                parent.transform.FindChild("DoorLeft").Rotate(new Vector3(0, 90f, 0), Space.Self);
+                parent.transform.FindChild("DoorRight").Rotate(new Vector3(0, -90f, 0), Space.Self);
+            }
             doorsOpen = true;
         }
         

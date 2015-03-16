@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Ball\Controls.cs" />
      <Compile Include="Assets\Scripts\Button.cs" />
+     <Compile Include="Assets\Scripts\DoorColorSpecifier.cs" />
      <Compile Include="Assets\Scripts\Main\Entry.cs" />
      <Compile Include="Assets\Scripts\Main\MoveCamera.cs" />
      <Compile Include="Assets\Scripts\Map.cs" />

@@ -77,7 +77,17 @@ public class Controls : MonoBehaviour {
 		maxSpeed = 10f;
         GetComponent<ParticleSystem>().enableEmission = false;
         // DBG
-        PreviousRoom = CurrentRoom = "Room_3";
+        PreviousRoom = CurrentRoom = "Room_4";
+        /* Switches round door colors back to front
+         * We may also need to rotate etc...
+        GameObject[] suz = GameObject.FindGameObjectsWithTag("doorSurround");
+
+        foreach (var s in suz) {
+            Color tmp = s.GetComponent<Renderer>().materials[0].color;
+            s.GetComponent<Renderer>().materials[0].color = s.GetComponent<Renderer>().materials[1].color;
+            s.GetComponent<Renderer>().materials[1].color = tmp;
+        }
+        */
 	}
 
     /*
