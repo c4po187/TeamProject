@@ -3,34 +3,75 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 #endregion
 
 #region Objects
 
+/*
+ * USAGE:
+ * The easiest way to use this component is from the inspector, as a component.
+ * There are of course public functions if access is required via a script.
+ * 
+ * If all you need is a single spawn point, use Spawn Location.
+ * If you require multiple spawn points or reference nodes, then use nodes. 
+ * You may assign as many as you wish. Always give each node a unique key
+ * which is simply a string, as each node is accessed by this key.
+ */
+
 [ExecuteInEditMode]
 [AddComponentMenu("Location/Spawn Point")]
 public class SpawnPoint : MonoBehaviour {
 
+    /*
+     * NOTE:
+     * Never instantiate a list, Vector among other types
+     * if used as a public property in a custom component
+     * such as this SpawnPoint class. The list will be
+     * re-allocated memory on runtime, erasing the values
+     * you previously entered.
+     * Just declare, and enter the values in the inspector,
+     * Unity will take care of the rest.
+     */
+
     #region Members
 
-    private GameObject actor;
+    private GameObject m_currentRoom;
+    public GameObject actor;
     public string actorTag;
     public Vector3 spawnLocation;
-    public List<Vector3> spawnLocations;
-    public int startIndex;
+    public List<Map> nodes;
+    
+    [ReadOnly]
+    public string currentRoom;
 
     #endregion
 
     #region Functions
 
-    void Awake() {
-        spawnLocations = new List<Vector3>();
+    void Start() {
+        try {
+            actor = this.gameObject;
+        }
+        catch (Exception) {
+            throw new Exception("Could not attach actor!");
+        }
+        if (actor == null)
+            actor = GameObject.FindGameObjectWithTag(actorTag);
+        GetCurrentRoom();
     }
 
-    void Start() {
-        actor = GameObject.FindGameObjectWithTag(actorTag);
-        startIndex = 0;
+    private void GetCurrentRoom() {
+        GameObject[] floors = GameObject.FindGameObjectsWithTag("ground");
+        foreach (var f in floors) {
+            if (f.GetComponent<Collider>().bounds.Intersects(actor.GetComponent<Collider>().bounds)) {
+                m_currentRoom = f.transform.parent.parent.parent.gameObject;
+                break;
+            }
+        }
+        if (m_currentRoom != null)
+            currentRoom = m_currentRoom.name;
     }
 
     public void SetTag(string s) {
@@ -41,28 +82,26 @@ public class SpawnPoint : MonoBehaviour {
         return actorTag;
     }
 
-    public void AddSpawnLocation(Vector3 v) {
-        spawnLocations.Add(v);
+    public void AddNode(string room, Vector3 location) {
+        Map map = new Map();
+        map.Add(room, location);
+        nodes.Add(map);
     }
 
-    public void AddSpawnLocation(float x, float y, float z) {
-        AddSpawnLocation(new Vector3(x, y, z));
+    public Vector3 GetLocationFrom(string room) {
+        return nodes.Find(x => x.key.Equals(room)).location;
     }
 
-    public List<Vector3> GetSpawnLocations() {
-        return spawnLocations;
+    public string GetRoomFrom(Vector3 location) {
+        return nodes.Find(x => x.location.Equals(location)).key;
     }
 
-    public Vector3 GetSpawnLocationAt(int index) {
-        return spawnLocations[index];
+    public void RemoveNodeAtKey(string room) {
+        nodes.RemoveAll(x => x.key.Equals(room));
     }
 
-    public void RemoveSpawnLocationAt(int index) {
-        spawnLocations.RemoveAt(index);
-    }
-
-    public void ClearSpawnLocations() {
-        spawnLocations.Clear();
+    public void ClearNodes() {
+        nodes.Clear();
     }
 
     public void SetSpawnLocation(Vector3 v) {
@@ -86,14 +125,10 @@ public class SpawnPoint : MonoBehaviour {
     }
 
     public void Respawn() {
-        if (spawnLocations.Count == 0) {
+        if (nodes.Count == 0) 
             actor.transform.position = spawnLocation;
-        }
-        else {
-            actor.transform.position = spawnLocations[startIndex];
-            if (startIndex < spawnLocations.Count - 1)
-                ++startIndex;
-        }
+        else 
+            actor.transform.position = nodes.Find(x => x.key.Equals(currentRoom)).location;
     }
 
     public void Respawn(Vector3 newLocation) {

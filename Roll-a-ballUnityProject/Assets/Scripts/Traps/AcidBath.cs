@@ -29,8 +29,10 @@ public class AcidBath : MonoBehaviour {
 	void Update () {
         if (m_respawnTimer.IsRunning) {
             if (m_respawnTimer.ElapsedMilliseconds >= m_delay) {
+                // Reset the timer, respawn and rescale the player
                 m_respawnTimer.Reset();
                 GameObject.FindGameObjectWithTag("Player").GetComponent<SpawnPoint>().Respawn();
+                GameObject.FindGameObjectWithTag("Player").SendMessage("Rescale");
             }
         }
 	}
@@ -38,7 +40,9 @@ public class AcidBath : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag.Equals("Player")) {
             foreach (var g in m_grounds) {
+                // Disable collisions between the player and floor, so we can sink
                 Physics.IgnoreCollision(other, g.GetComponent<Collider>());
+                other.gameObject.GetComponent<ParticleSystem>().enableEmission = true;
             }
         }
     }
@@ -46,6 +50,8 @@ public class AcidBath : MonoBehaviour {
     void OnTriggerStay(Collider other) {
         if (other.gameObject.tag.Equals("Player")) {  
             other.gameObject.SendMessage("Set_BallRelativity", Relativity.Sinking);
+            // Ensure the ball faces towards the node, so we can see the ball's dissolve particle animation
+            other.gameObject.transform.LookAt(this.GetComponent<SpawnPoint>().GetSpawnLocation());
         }
     }
 
@@ -53,6 +59,7 @@ public class AcidBath : MonoBehaviour {
         if (other.gameObject.tag.Equals("Player")) {
             other.gameObject.SendMessage("Set_BallRelativity", Relativity.Ground);
             foreach (var g in m_grounds) {
+                // Turn collisions back on between the player and the floor
                 Physics.IgnoreCollision(other, g.GetComponent<Collider>(), false);
             }
             // Init delay timer for respawn

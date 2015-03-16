@@ -45,6 +45,7 @@ public class DoorTrigger : MonoBehaviour {
             m_previousRoom = other.GetComponent<Controls>().CurrentRoom;
             // Get the current room string via this objects hierarchy
             m_currentRoom = this.transform.parent.parent.parent.parent.name;
+            other.GetComponent<SpawnPoint>().currentRoom = m_currentRoom;
             
             // Store the current room & previous room names in the ball controller
             other.gameObject.SendMessage("Set_PreviousRoom", m_previousRoom);
@@ -57,6 +58,8 @@ public class DoorTrigger : MonoBehaviour {
                 m_currentDoorColor = this.transform.parent.FindChild("DoorRight")
                     .GetComponent<Renderer>().material.color;
                 m_backDoorColor = GetBackDoorColour(m_currentDoorColor);
+                // Enable doors
+                Button.doorsOpen = false;
             }
         }
     }

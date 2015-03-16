@@ -50,6 +50,7 @@
      <Compile Include="Assets\Scripts\Button.cs" />
      <Compile Include="Assets\Scripts\Main\Entry.cs" />
      <Compile Include="Assets\Scripts\Main\MoveCamera.cs" />
+     <Compile Include="Assets\Scripts\Map.cs" />
      <Compile Include="Assets\Scripts\MeshParticleRenderer.cs" />
      <Compile Include="Assets\Scripts\Obstacles\ColourChange.cs" />
      <Compile Include="Assets\Scripts\Obstacles\ColourSwitchParticles.cs" />
@@ -59,6 +60,7 @@
      <Compile Include="Assets\Scripts\Obstacles\Lift.cs" />
      <Compile Include="Assets\Scripts\Obstacles\MagStrip.cs" />
      <Compile Include="Assets\Scripts\Obstacles\PushBlock.cs" />
+     <Compile Include="Assets\Scripts\ReadOnly.cs" />
      <Compile Include="Assets\Scripts\Room\Room.cs" />
      <Compile Include="Assets\Scripts\Room\Wall.cs" />
      <Compile Include="Assets\Scripts\SpawnPoint.cs" />

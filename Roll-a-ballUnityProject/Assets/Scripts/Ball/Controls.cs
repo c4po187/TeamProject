@@ -57,6 +57,11 @@ public class Controls : MonoBehaviour {
         this.GetComponent<Renderer>().material.color = color;
     }
 
+    public void Rescale() {
+        this.transform.localScale = Vector3.one;
+        GetComponent<ParticleSystem>().enableEmission = false;
+    }
+
     /*
      * Initilaizers
      */
@@ -70,9 +75,9 @@ public class Controls : MonoBehaviour {
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 		distToGround = GetComponent<Collider>().bounds.extents.y;
 		maxSpeed = 10f;
-        
+        GetComponent<ParticleSystem>().enableEmission = false;
         // DBG
-        PreviousRoom = CurrentRoom = "Room_4";
+        PreviousRoom = CurrentRoom = "Room_3";
 	}
 
     /*
@@ -147,7 +152,9 @@ public class Controls : MonoBehaviour {
                 GetComponent<Rigidbody>().AddForce(Vector3.up * Physics.gravity.magnitude);
                 break;
             case Relativity.Sinking:
-                GetComponent<Rigidbody>().AddForce(-Vector3.up * 0.75f);
+                GetComponent<Rigidbody>().velocity = new Vector3(0, GetComponent<Rigidbody>().velocity.y, 0);
+                GetComponent<Rigidbody>().AddForce(-Vector3.up * 0.05f, ForceMode.VelocityChange);
+                this.transform.localScale -= new Vector3(0.25f, 0.25f, 0.25f) * Time.deltaTime;
                 break;
         }
     }

@@ -6,7 +6,7 @@ public class Button : MonoBehaviour
 {
 	public List<GameObject> allDoorsThisRoom;
 	GameObject thisRoom;
-    bool doorsOpen;
+    public static bool doorsOpen;
     Color m_ballColour;
 
 	// Use this for initialization
@@ -15,14 +15,20 @@ public class Button : MonoBehaviour
 		doorsOpen = false;
 	}
 
+    public void EnableDoors() {
+        doorsOpen = false;
+    }
+
 	void OnCollisionEnter(Collision other)
 	{
         if (other.gameObject.tag.Equals("Player")) {
             switch (this.tag) { 
                 case "btnDoor":
                     m_ballColour = other.gameObject.GetComponent<Renderer>().material.color;
-                    GetDoors();
-                    OpenDoors();
+                    if (!doorsOpen) {
+                        //GetDoors();
+                        OpenDoors();
+                    }
                     break;
                 case "btnMagstrip":
                     GameObject.FindGameObjectWithTag("MagStrip")
@@ -35,6 +41,12 @@ public class Button : MonoBehaviour
         }
 	}
 
+    /*
+     * This function is no longer needed. 
+     * Plus you guys were wasting resources and never clearing the list after querying it,
+     * thus adding more and more duplicate entries on each call....
+     * Duh!!
+     */
 	void GetDoors()
 	{
         // Added another level of parent as it is now within a new hierarchy
@@ -53,16 +65,34 @@ public class Button : MonoBehaviour
 
 	void OpenDoors()
 	{
-		foreach (GameObject door in allDoorsThisRoom)
-		{
-			Vector3 open; 
 
+        GameObject[] surrounds = GameObject.FindGameObjectsWithTag("doorSurround");
+        GameObject parent = null;
+
+        for (int i = 0; i < surrounds.Length; ++i) {
+            if (surrounds[i].GetComponent<Renderer>().material.color.Equals(m_ballColour)) { 
+                parent = surrounds[i].transform.parent.gameObject;
+            }
+        }
+
+        if (parent != null) {
+            parent.transform.FindChild("DoorLeft").Rotate(new Vector3(0, -90f, 0), Space.Self);
+            parent.transform.FindChild("DoorRight").Rotate(new Vector3(0, 90f, 0), Space.Self);
+            doorsOpen = true;
+        }
+        
+        /*
+        foreach (GameObject door in allDoorsThisRoom)
+		{
             if (door.GetComponent<Renderer>().material.color == m_ballColour) {
                 open = door.transform.position;
                 open.y += 3;
                 door.transform.position += open;
                 //doorsOpen = false;
             }
+            
 		}
+        allDoorsThisRoom.Clear();
+        */
 	}
 }
