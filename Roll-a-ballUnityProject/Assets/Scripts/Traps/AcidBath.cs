@@ -33,6 +33,10 @@ public class AcidBath : MonoBehaviour {
                 m_respawnTimer.Reset();
                 GameObject.FindGameObjectWithTag("Player").GetComponent<SpawnPoint>().Respawn();
                 GameObject.FindGameObjectWithTag("Player").SendMessage("Rescale");
+                foreach (var c in DoorTrigger.ColorLookUp) {
+                    if (GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color.Equals(c.color))
+                        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.white;
+                }
             }
         }
 	}
@@ -52,6 +56,10 @@ public class AcidBath : MonoBehaviour {
             other.gameObject.SendMessage("Set_BallRelativity", Relativity.Sinking);
             // Ensure the ball faces towards the node, so we can see the ball's dissolve particle animation
             other.gameObject.transform.LookAt(this.GetComponent<SpawnPoint>().GetSpawnLocation());
+            if (!this.GetComponent<AudioSource>().isPlaying) {
+                this.GetComponent<AudioSource>().pitch = 1.5f;
+                this.GetComponent<AudioSource>().Play();
+            }
         }
     }
 

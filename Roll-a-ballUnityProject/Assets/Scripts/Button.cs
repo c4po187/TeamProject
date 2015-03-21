@@ -1,33 +1,43 @@
-﻿using UnityEngine;
+﻿#region Prerequisites
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Button : MonoBehaviour 
-{
-	public List<GameObject> allDoorsThisRoom;
-	GameObject thisRoom;
-    public static bool doorsOpen;
-    Color m_ballColour;
+#endregion
 
-	// Use this for initialization
-	void Start () 
-	{
-		doorsOpen = false;
+#region Objects
+
+public class Button : MonoBehaviour {
+    
+    #region Members
+
+    public static bool doorsOpen;
+    private GameObject m_door, m_backDoor;
+    private Vector3 m_doorPos, m_backDoorPos;
+
+    #endregion
+
+    #region Functions
+
+    // Use this for initialization
+	void Start () {
+        doorsOpen = false;
+        m_door = m_backDoor = null;
+        m_doorPos = m_backDoorPos = new Vector3();
 	}
 
     public void EnableDoors() {
         doorsOpen = false;
     }
 
-	void OnCollisionEnter(Collision other)
-	{
-        if (other.gameObject.tag.Equals("Player")) {
+	void OnCollisionEnter(Collision other) {
+        GameObject collidingObject = other.gameObject;
+        if (collidingObject.tag.Equals("Player")) {
             switch (this.tag) { 
                 case "btnDoor":
-                    m_ballColour = other.gameObject.GetComponent<Renderer>().material.color;
                     if (!doorsOpen) {
-                        //GetDoors();
-                        OpenDoors();
+                        OpenDoors(ref collidingObject);
                     }
                     break;
                 case "btnMagstrip":
@@ -41,73 +51,70 @@ public class Button : MonoBehaviour
         }
 	}
 
-    /*
-     * This function is no longer needed. 
-     * Plus you guys were wasting resources and never clearing the list after querying it,
-     * thus adding more and more duplicate entries on each call....
-     * Duh!!
-     */
-	void GetDoors()
-	{
-        // Added another level of parent as it is now within a new hierarchy
-        thisRoom = this.transform.parent.parent.parent.gameObject;  
-		Debug.Log (thisRoom.name);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallT/Door/DoorLeft").gameObject);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallB/Door/DoorLeft").gameObject);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallL/Door/DoorLeft").gameObject);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallR/Door/DoorLeft").gameObject);
-
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallT/Door/DoorRight").gameObject);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallB/Door/DoorRight").gameObject);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallL/Door/DoorRight").gameObject);
-		allDoorsThisRoom.Add(thisRoom.transform.Find("Walls&Floor/WallR/Door/DoorRight").gameObject);
-	}
-
-	void OpenDoors()
-	{
-
-        GameObject[] surrounds = GameObject.FindGameObjectsWithTag("doorSurround");
-        var sList = new List<GameObject>(surrounds);
-        sList.RemoveAll(x => x.transform.root != this.transform.root);
-
-        GameObject parent = null;
-
-        foreach (var s in sList) {
-            if (s.GetComponent<Renderer>().materials[0].color.Equals(m_ballColour)) {
-                parent = s.transform.parent.gameObject;
+    void FixedUpdate() {
+        if (m_door != null && m_backDoor != null) {
+            m_door.transform.position = Vector3.MoveTowards(
+                m_door.transform.position, m_doorPos, Time.deltaTime * 0.65f);
+            m_backDoor.transform.position = Vector3.MoveTowards(
+                m_backDoor.transform.position, m_backDoorPos, Time.deltaTime * 0.65f);
+            if (m_door.transform.position.y >= m_doorPos.y
+                && m_backDoor.transform.position.y >= m_backDoorPos.y) {
+                m_door = null;
+                m_backDoor = null;
             }
         }
-        /*
-        for (int i = 0; i < surrounds.Length; ++i) {
-            if (surrounds[i].GetComponent<Renderer>().material.color.Equals(m_ballColour)) { 
-                parent = surrounds[i].transform.parent.gameObject;
-            }
-        }
-        */
-        if (parent != null) {
-            if (m_ballColour.Equals(Color.green) || m_ballColour.Equals(Color.red)) {
-                parent.transform.FindChild("DoorLeft").Rotate(new Vector3(0, -90f, 0), Space.Self);
-                parent.transform.FindChild("DoorRight").Rotate(new Vector3(0, 90f, 0), Space.Self);
-            }
-            else {
-                parent.transform.FindChild("DoorLeft").Rotate(new Vector3(0, 90f, 0), Space.Self);
-                parent.transform.FindChild("DoorRight").Rotate(new Vector3(0, -90f, 0), Space.Self);
-            }
-            doorsOpen = true;
-        }
-        
-        /*
-        foreach (GameObject door in allDoorsThisRoom)
-		{
-            if (door.GetComponent<Renderer>().material.color == m_ballColour) {
-                open = door.transform.position;
-                open.y += 3;
-                door.transform.position += open;
-                //doorsOpen = false;
+    }
+
+	private void OpenDoors(ref GameObject player) {
+
+        Color ballColor = player.GetComponent<Renderer>().material.color;
+
+        if (!ballColor.Equals(Color.white) && !doorsOpen) {
+            string room = this.transform.root.name;
+
+            GameObject[] doors = GameObject.FindGameObjectsWithTag("door");
+            var dList = new List<GameObject>(doors);
+            dList.RemoveAll(x => !x.transform.root.name.Equals(room));
+
+
+            foreach (var d in dList) {
+                if (d.GetComponent<Renderer>().materials[1].color.Equals(ballColor)) {
+                    m_doorPos = d.transform.position;
+                    d.GetComponent<AudioSource>().volume = 0.35f;
+                    d.GetComponent<AudioSource>().Play();
+                    m_door = d;
+                    break;
+                }
             }
             
-		}
-        allDoorsThisRoom.Clear();
-        */
-	}
+            var iList = new List<GameObject>(doors);
+            iList.RemoveAll(x => ReferenceEquals(x, m_door));
+            foreach (var i in iList) {
+                if (i.GetComponent<Renderer>().materials[1].color.Equals(
+                    DoorTrigger.GetBackDoorColour(ballColor)) &&
+                    !i.transform.root.name.Equals(room)) { 
+                    
+                }
+            }
+            
+            m_backDoor = iList.Find(
+                x => x.GetComponent<Renderer>().materials[1].color.Equals(
+                    DoorTrigger.GetBackDoorColour(ballColor)) &&
+                    !x.transform.root.name.Equals(room));
+            m_backDoorPos = m_backDoor.transform.position;
+
+            m_doorPos.y += 2f;
+            m_backDoorPos.y += 2f;
+            
+            doorsOpen = true;
+        }
+
+        return;
+    }
+
+    #endregion
 }
+
+#endregion
+
+// END OF FILE

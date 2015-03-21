@@ -78,16 +78,6 @@ public class Controls : MonoBehaviour {
         GetComponent<ParticleSystem>().enableEmission = false;
         // DBG
         PreviousRoom = CurrentRoom = "Room_4";
-        /* Switches round door colors back to front
-         * We may also need to rotate etc...
-        GameObject[] suz = GameObject.FindGameObjectsWithTag("doorSurround");
-
-        foreach (var s in suz) {
-            Color tmp = s.GetComponent<Renderer>().materials[0].color;
-            s.GetComponent<Renderer>().materials[0].color = s.GetComponent<Renderer>().materials[1].color;
-            s.GetComponent<Renderer>().materials[1].color = tmp;
-        }
-        */
 	}
 
     /*
@@ -192,22 +182,15 @@ public class Controls : MonoBehaviour {
 		// todo: there is a problem with the relative position where it is taking the 
 		//local y coordinate of the sphere to do the above/bellow calculation meaning 
 		//sometimes it triggers above and sometimes not depending on which way up the sphere is.
-
+  
 		Vector3 contactPoint = other.contacts[0].point;
 		var relativePosition = transform.InverseTransformPoint(contactPoint);
           
 		// dont want to colide with objects we are rollling on
 		if (!(relativePosition.y > 0))
 		{
-            
-            
             //Debug.Log("The object is not above.");
-
-			
-			if (other.gameObject.name != "FloorTL" &&
-			    other.gameObject.name != "FloorBL" &&
-			    other.gameObject.name != "FloorTR" &&
-			    other.gameObject.name != "FloorBR")
+			if (!other.gameObject.tag.Equals("ground"))
 			{
 				Debug.Log(other.gameObject.name);
 				this.GetComponent<AudioSource>().Play();
