@@ -108,7 +108,7 @@ public class SpawnPoint : MonoBehaviour {
         spawnLocation = v;
     }
 
-    public void SetSpawnlocation(float x, float y, float z) {
+    public void SetSpawnLocation(float x, float y, float z) {
         spawnLocation = new Vector3(x, y, z);
     }
 

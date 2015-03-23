@@ -26,6 +26,7 @@ public class Lift : MonoBehaviour {
 
     public long delay;
     public float top, speed;
+    public bool lightOn;
     private const float BOTTOM = 1.05f;
     private LiftState m_liftState;
     private Stopwatch m_timer;
@@ -40,6 +41,7 @@ public class Lift : MonoBehaviour {
         speed = 2.5f;
         delay = 750;
         m_liftState = LiftState.Idle;
+        this.transform.FindChild("Spotlight").gameObject.GetComponent<Light>().enabled = lightOn;
     }
 
     // Called on runtime, and the object is enabled - Init
@@ -48,20 +50,22 @@ public class Lift : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-    void Update() { ; }
+    void Update() {
+        this.transform.FindChild("Spotlight").gameObject.GetComponent<Light>().enabled = lightOn;
+    }
 
     /*
      * FixedUpdate gets called relative to the current framerate, 
      * best for physics, translations, etc..
      */
     void FixedUpdate() {
-        if (m_liftState.Equals(LiftState.Idle) && this.transform.position.y > BOTTOM) {
+        if (m_liftState.Equals(LiftState.Idle) && this.transform.position.y > BOTTOM && lightOn) {
             this.transform.Translate(Vector3.down * (Time.deltaTime * speed), Space.World);
         }
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.tag.Equals("Player")) {
+        if (other.gameObject.tag.Equals("Player") && lightOn) {
             if (m_timer.IsRunning)
                 m_timer.Reset();
             m_timer.Start();
@@ -70,11 +74,12 @@ public class Lift : MonoBehaviour {
 
     void OnTriggerStay(Collider other) {
         if (other.gameObject.tag.Equals("Player")) {
-            if (m_timer.ElapsedMilliseconds >= delay) {
+            if (m_timer.ElapsedMilliseconds >= delay && lightOn) {
                 delay = 0;
 
                 if (m_liftState.Equals(LiftState.Idle)) {
-                    m_liftState = LiftState.Up;                   
+                    m_liftState = LiftState.Up;
+                    this.GetComponent<AudioSource>().Play();
                 }
 
                 if (this.transform.position.y >= top) {
@@ -104,6 +109,8 @@ public class Lift : MonoBehaviour {
     }
 
     void OnTriggerExit(Collider other) {
+        if (this.GetComponent<AudioSource>().isPlaying)
+            this.GetComponent<AudioSource>().Stop();
         m_liftState = LiftState.Idle;
         delay = 750;
         m_timer.Reset();

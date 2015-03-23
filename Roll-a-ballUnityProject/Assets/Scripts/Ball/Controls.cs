@@ -70,14 +70,19 @@ public class Controls : MonoBehaviour {
 	void Start () 
 	{
 		//Physics.gravity.Set(0.0f,-1000f,0.0f);
+        maxSpeed = 10f;
         BallRelativity = Relativity.Ground;
         WallDirectional = Vector3.zero;
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 		distToGround = GetComponent<Collider>().bounds.extents.y;
-		maxSpeed = 10f;
         GetComponent<ParticleSystem>().enableEmission = false;
-        // DBG
-        PreviousRoom = CurrentRoom = "Room_4";
+        
+        /* TODO: 
+         * We need to implement a means of determining which room we're in, 
+         * rather than this hardcode style.
+         */
+        PreviousRoom = CurrentRoom = "Room_5";
+        this.transform.position = GetComponent<SpawnPoint>().GetLocationFrom(CurrentRoom);
 	}
 
     /*

@@ -41,7 +41,7 @@ public class DynamicBlock : MonoBehaviour {
         speed = 2.5f;
         m_timer = new Stopwatch();
         startPosition = this.transform.position;
-        endPosition = new Vector3(startPosition.x, startPosition.y, startPosition.z -7f);
+        //endPosition = new Vector3(startPosition.x, startPosition.y, startPosition.z -7f);
     }
 
     void Start() {
@@ -53,6 +53,13 @@ public class DynamicBlock : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        // DBG
+        if (this.transform.root.name.Equals("Room_3")) {
+            UnityEngine.Debug.Log("X: " + this.transform.position.x.ToString() +
+                    ", Y: " + this.transform.position.y.ToString() +
+                    ", Z: " + this.transform.position.z.ToString());
+        }
+        
         if (m_dState.Equals(DynamicState.Moving)) {
             if (this.transform.position.Equals(startPosition) || 
                 this.transform.position.Equals(endPosition)) {

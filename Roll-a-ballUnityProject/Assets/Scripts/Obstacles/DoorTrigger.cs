@@ -95,6 +95,8 @@ public class DoorTrigger : MonoBehaviour {
         m_thatPos = m_thatDoor.transform.position;
         m_thisPos.y -= 2f;
         m_thatPos.y -= 2f;
+        m_thisDoor.GetComponents<AudioSource>()[1].volume = 0.35f;
+        m_thisDoor.GetComponents<AudioSource>()[1].Play();
         m_thisDoor.transform.position = m_thisPos;
         m_thatDoor.transform.position = m_thatPos;
         Button.doorsOpen = false;
@@ -113,6 +115,15 @@ public class DoorTrigger : MonoBehaviour {
         uint masked = m_colorLookUp.Find(x => x.color.Equals(color)).co_mask ^ BACK_MASK;
 
         return m_colorLookUp.Find(x => x.co_mask.Equals(masked)).color;
+    }
+
+    public static GameObject GetClosest(GameObject[] gameObjects, Vector3 origin) {
+        float[] distances = new float[gameObjects.Length];
+        for (int i = 0; i < gameObjects.Length; ++i) {
+            distances[i] = (gameObjects[i].transform.position - origin).sqrMagnitude;
+        }
+        System.Array.Sort(distances, gameObjects);
+        return gameObjects[0];
     }
 
     #endregion

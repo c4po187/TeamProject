@@ -44,6 +44,17 @@ public class Button : MonoBehaviour {
                     GameObject.FindGameObjectWithTag("MagStrip")
                         .SendMessage("ModifyPolarity", Polarity.Positive);
                     break;
+                case "btnEnableLift":
+                    GameObject[] lifts = GameObject.FindGameObjectsWithTag("lift");
+                    GameObject lift = null;
+                    for (int i = 0; i < lifts.Length; ++i) {
+                        if (lifts[i].transform.root.name.Equals(this.transform.root.name)) {
+                            lift = lifts[i];
+                            break;
+                        }
+                    }
+                    lift.GetComponent<Lift>().lightOn = true;
+                    break;
                 default:
                     break;
             }
@@ -80,29 +91,19 @@ public class Button : MonoBehaviour {
             foreach (var d in dList) {
                 if (d.GetComponent<Renderer>().materials[1].color.Equals(ballColor)) {
                     m_doorPos = d.transform.position;
-                    d.GetComponent<AudioSource>().volume = 0.35f;
-                    d.GetComponent<AudioSource>().Play();
+                    d.GetComponents<AudioSource>()[0].volume = 0.35f;
+                    d.GetComponents<AudioSource>()[0].Play();
                     m_door = d;
                     break;
                 }
             }
-            
+
             var iList = new List<GameObject>(doors);
             iList.RemoveAll(x => ReferenceEquals(x, m_door));
-            foreach (var i in iList) {
-                if (i.GetComponent<Renderer>().materials[1].color.Equals(
-                    DoorTrigger.GetBackDoorColour(ballColor)) &&
-                    !i.transform.root.name.Equals(room)) { 
-                    
-                }
-            }
-            
-            m_backDoor = iList.Find(
-                x => x.GetComponent<Renderer>().materials[1].color.Equals(
-                    DoorTrigger.GetBackDoorColour(ballColor)) &&
-                    !x.transform.root.name.Equals(room));
+            GameObject[] _doors = iList.ToArray();
+            m_backDoor = DoorTrigger.GetClosest(_doors, m_door.transform.position);
             m_backDoorPos = m_backDoor.transform.position;
-
+              
             m_doorPos.y += 2f;
             m_backDoorPos.y += 2f;
             
