@@ -7,7 +7,8 @@ public enum Relativity {
     Ground = 1,
     Wall = Ground << 1,
     Ceiling = Ground << 2,
-    Sinking = Ground << 3
+    Sinking = Ground << 3,
+    Launched = Ground << 4
 }
 
 #endregion
@@ -17,8 +18,9 @@ public class Controls : MonoBehaviour {
     #region Members
 
     public float currentSpeed;
-	public float maxSpeed;
+    public float maxSpeed;
 	private float distToGround;
+    private float m_launchSpeed;
 
     #endregion
 
@@ -62,6 +64,10 @@ public class Controls : MonoBehaviour {
         GetComponent<ParticleSystem>().enableEmission = false;
     }
 
+    public void NegateLaunchSpeed() {
+        m_launchSpeed *= -1f;
+    }
+
     /*
      * Initilaizers
      */
@@ -71,6 +77,7 @@ public class Controls : MonoBehaviour {
 	{
 		//Physics.gravity.Set(0.0f,-1000f,0.0f);
         maxSpeed = 10f;
+        m_launchSpeed = 20f;
         BallRelativity = Relativity.Ground;
         WallDirectional = Vector3.zero;
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -81,7 +88,7 @@ public class Controls : MonoBehaviour {
          * We need to implement a means of determining which room we're in, 
          * rather than this hardcode style.
          */
-        PreviousRoom = CurrentRoom = "Room_5";
+        PreviousRoom = CurrentRoom = "Room_6";
         this.transform.position = GetComponent<SpawnPoint>().GetLocationFrom(CurrentRoom);
 	}
 
@@ -160,6 +167,9 @@ public class Controls : MonoBehaviour {
                 GetComponent<Rigidbody>().velocity = new Vector3(0, GetComponent<Rigidbody>().velocity.y, 0);
                 GetComponent<Rigidbody>().AddForce(-Vector3.up * 0.05f, ForceMode.VelocityChange);
                 this.transform.localScale -= new Vector3(0.25f, 0.25f, 0.25f) * Time.deltaTime;
+                break;
+            case Relativity.Launched:
+                GetComponent<Rigidbody>().AddForce(Vector3.left * m_launchSpeed);
                 break;
         }
     }

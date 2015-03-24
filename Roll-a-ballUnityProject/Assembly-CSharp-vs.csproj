@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\Obstacles\Lift.cs" />
      <Compile Include="Assets\Scripts\Obstacles\MagStrip.cs" />
      <Compile Include="Assets\Scripts\Obstacles\PushBlock.cs" />
+     <Compile Include="Assets\Scripts\Pendulum.cs" />
      <Compile Include="Assets\Scripts\ReadOnly.cs" />
      <Compile Include="Assets\Scripts\Room\Room.cs" />
      <Compile Include="Assets\Scripts\Room\Wall.cs" />
