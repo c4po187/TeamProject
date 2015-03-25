@@ -7,8 +7,7 @@ public enum Relativity {
     Ground = 1,
     Wall = Ground << 1,
     Ceiling = Ground << 2,
-    Sinking = Ground << 3,
-    Launched = Ground << 4
+    Sinking = Ground << 3
 }
 
 #endregion
@@ -20,7 +19,6 @@ public class Controls : MonoBehaviour {
     public float currentSpeed;
     public float maxSpeed;
 	private float distToGround;
-    private float m_launchSpeed;
 
     #endregion
 
@@ -64,10 +62,6 @@ public class Controls : MonoBehaviour {
         GetComponent<ParticleSystem>().enableEmission = false;
     }
 
-    public void NegateLaunchSpeed() {
-        m_launchSpeed *= -1f;
-    }
-
     /*
      * Initilaizers
      */
@@ -77,7 +71,6 @@ public class Controls : MonoBehaviour {
 	{
 		//Physics.gravity.Set(0.0f,-1000f,0.0f);
         maxSpeed = 10f;
-        m_launchSpeed = 20f;
         BallRelativity = Relativity.Ground;
         WallDirectional = Vector3.zero;
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -167,9 +160,6 @@ public class Controls : MonoBehaviour {
                 GetComponent<Rigidbody>().velocity = new Vector3(0, GetComponent<Rigidbody>().velocity.y, 0);
                 GetComponent<Rigidbody>().AddForce(-Vector3.up * 0.05f, ForceMode.VelocityChange);
                 this.transform.localScale -= new Vector3(0.25f, 0.25f, 0.25f) * Time.deltaTime;
-                break;
-            case Relativity.Launched:
-                GetComponent<Rigidbody>().AddForce(Vector3.left * m_launchSpeed);
                 break;
         }
     }

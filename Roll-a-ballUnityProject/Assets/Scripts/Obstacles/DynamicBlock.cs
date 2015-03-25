@@ -3,6 +3,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Diagnostics;
+using System;
 
 #endregion
 
@@ -19,6 +20,14 @@ public enum DynamicState {
     Moving
 }
 
+[Flags]
+public enum DynamicAxis { 
+    _Undef = 0x0,
+    X_Axis = 0x01,
+    Y_Axis = X_Axis << 1,
+    Z_Axis = Y_Axis << 1
+}
+
 #endregion
 
 #region Objects
@@ -31,24 +40,25 @@ public class DynamicBlock : MonoBehaviour {
     public float delay;
     public float speed;
     private Stopwatch m_timer;
-    public DynamicDirection m_dDir;
-    public DynamicState m_dState;
+    private DynamicDirection m_dDir;
+    private DynamicState m_dState;
+    private DynamicAxis m_dAxis;
 
     #endregion
 
     void Awake() {
         delay = 2000;
         speed = 2.5f;
-        m_timer = new Stopwatch();
+        m_dDir = DynamicDirection.ToEnd;
+        m_dState = DynamicState.Moving;
+        m_dAxis = (DynamicAxis.X_Axis | DynamicAxis.Y_Axis | DynamicAxis.Z_Axis);
         startPosition = this.transform.position;
-        //endPosition = new Vector3(startPosition.x, startPosition.y, startPosition.z -7f);
+        this.transform.position = new Vector3(
+            startPosition.x, startPosition.y, startPosition.z - 0.001f);
     }
 
     void Start() {
-        m_dDir = DynamicDirection.ToEnd;
-        m_dState = DynamicState.Moving;
-        this.transform.position = new Vector3(
-            startPosition.x, startPosition.y, startPosition.z - 0.001f);
+        m_timer = new Stopwatch();
     }
 
 	// Update is called once per frame

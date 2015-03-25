@@ -50,44 +50,18 @@ public class Pendulum : MonoBehaviour {
         if (!m_bDroppedIn) {
             if (left_right.Equals("Left") || left_right.Equals("left")) {
                 this.transform.rotation = Quaternion.RotateTowards(m_qStart, m_qEnd, Time.time * Mathf.Pow(speed, 8.4f));
-                if (this.transform.rotation.x >= m_qEnd.x)
-                    m_bDroppedIn = true;
-            }
-            else {
+                m_bDroppedIn = (this.transform.rotation.x >= m_qEnd.x);
+            } else {
                 this.transform.rotation = Quaternion.RotateTowards(m_qEnd, m_qStart, Time.time * Mathf.Pow(speed, 8.4f));
-                if (this.transform.rotation.x <= m_qStart.x)
-                    m_bDroppedIn = true;
+                m_bDroppedIn = (this.transform.rotation.x <= m_qStart.x);
             }
         } else {
-            if (left_right.Equals("Left") || left_right.Equals("left")) {
-                this.transform.rotation = Quaternion.Lerp(
-                    m_qEnd, m_qStart, (Mathf.Sin(Time.time * speed) + 1f) / 2f);
-            } else {
-                this.transform.rotation = Quaternion.Lerp(
-                    m_qStart, m_qEnd, (Mathf.Sin(Time.time * speed) + 1f) / 2f);
-            }
+            if (left_right.Equals("Left") || left_right.Equals("left")) 
+                this.transform.rotation = Quaternion.Lerp(m_qEnd, m_qStart, (Mathf.Sin(Time.time * speed) + 1f) / 2f);
+            else 
+                this.transform.rotation = Quaternion.Lerp(m_qStart, m_qEnd, (Mathf.Sin(Time.time * speed) + 1f) / 2f);
         }
     }
-
-    /*
-    void OnCollisionEnter(Collision other) {
-        if (other.gameObject.tag.Equals("Player")) {
-            if (other.gameObject.transform.position.z <= (this.GetComponent<Collider>().bounds.center.z
-                + this.GetComponent<Collider>().bounds.extents.z) &&
-                other.gameObject.transform.position.z >= (this.GetComponent<Collider>().bounds.center.z
-                - this.GetComponent<Collider>().bounds.extents.z)) {
-                if (other.gameObject.transform.position.x < this.GetComponent<Collider>().bounds.center.x)
-                    other.gameObject.SendMessage("NegateLaunchSpeed");
-            }
-        }
-    }
-
-    void OnCollisionExit(Collision other) {
-        if (other.gameObject.tag.Equals("Player")) {
-            other.gameObject.SendMessage("Set_BallRelativity", Relativity.Launched);
-        }
-    }
-    */
 
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag.Equals("Player")) {
@@ -103,13 +77,6 @@ public class Pendulum : MonoBehaviour {
         } 
     }
 
-    /*
-    void OnTriggerExit(Collider other) {
-        if (other.gameObject.tag.Equals("Player")) {
-            other.gameObject.SendMessage("Set_BallRelativity", Relativity.Launched);
-        }
-    }
-    */
     #endregion
 }
 

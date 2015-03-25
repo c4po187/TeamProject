@@ -41,8 +41,13 @@ public class Button : MonoBehaviour {
                     }
                     break;
                 case "btnMagstrip":
-                    GameObject.FindGameObjectWithTag("MagStrip")
+                    GameObject[] mags = GameObject.FindGameObjectsWithTag("MagStrip");
+                    List<GameObject> _mags = new List<GameObject>(mags);
+                    _mags.Find(x => x.transform.root.name.Equals(other.gameObject.GetComponent<Controls>().CurrentRoom))
                         .SendMessage("ModifyPolarity", Polarity.Positive);
+                    /*
+                    GameObject.FindGameObjectWithTag("MagStrip")
+                        .SendMessage("ModifyPolarity", Polarity.Positive);*/
                     break;
                 case "btnEnableLift":
                     GameObject[] lifts = GameObject.FindGameObjectsWithTag("lift");
