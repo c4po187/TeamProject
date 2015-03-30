@@ -19,6 +19,7 @@ public class Controls : MonoBehaviour {
     public float currentSpeed;
     public float maxSpeed;
 	private float distToGround;
+    private AudioSource m_impactSfx, m_pickUpSfx;
 
     #endregion
 
@@ -77,11 +78,16 @@ public class Controls : MonoBehaviour {
 		distToGround = GetComponent<Collider>().bounds.extents.y;
         GetComponent<ParticleSystem>().enableEmission = false;
         
+        // Set up audio sources
+        AudioSource[] _as = GetComponents<AudioSource>();
+        m_impactSfx = _as[0];
+        m_pickUpSfx = _as[1];
+
         /* TODO: 
          * We need to implement a means of determining which room we're in, 
          * rather than this hardcode style.
          */
-        PreviousRoom = CurrentRoom = "Room_6";
+        PreviousRoom = CurrentRoom = "Room_1";
         this.transform.position = GetComponent<SpawnPoint>().GetLocationFrom(CurrentRoom);
 	}
 
@@ -179,6 +185,7 @@ public class Controls : MonoBehaviour {
 		{
 			this.GetComponent<Renderer>().material.color = other.GetComponent<Renderer>().material.color;
 			other.gameObject.SetActive(false);
+            m_pickUpSfx.Play();
 		}
 	}
 
@@ -198,7 +205,7 @@ public class Controls : MonoBehaviour {
 			if (!other.gameObject.tag.Equals("ground"))
 			{
 				Debug.Log(other.gameObject.name);
-				this.GetComponent<AudioSource>().Play();
+                m_impactSfx.Play();
 				#if UNITY_ANDROID
 				Handheld.Vibrate();
 				#endif

@@ -25,9 +25,8 @@ public class Lift : MonoBehaviour {
     #region Members
 
     public long delay;
-    public float top, speed;
+    public float top, bottom, speed;
     public bool lightOn;
-    private const float BOTTOM = 1.05f;
     private LiftState m_liftState;
     private Stopwatch m_timer;
 
@@ -37,7 +36,7 @@ public class Lift : MonoBehaviour {
 
     // Called on Script creation - Init
     void Awake() {
-        top = 8f;
+        //top = 8f;
         speed = 2.5f;
         delay = 750;
         m_liftState = LiftState.Idle;
@@ -59,8 +58,13 @@ public class Lift : MonoBehaviour {
      * best for physics, translations, etc..
      */
     void FixedUpdate() {
-        if (m_liftState.Equals(LiftState.Idle) && this.transform.position.y > BOTTOM && lightOn) {
+        if (m_liftState.Equals(LiftState.Idle) && this.transform.position.y > bottom && lightOn) {
             this.transform.Translate(Vector3.down * (Time.deltaTime * speed), Space.World);
+        }
+
+        if (this.transform.position.y <= bottom) {
+            this.transform.position = new Vector3(
+                this.transform.position.x, bottom, this.transform.position.z);
         }
     }
 
@@ -101,7 +105,7 @@ public class Lift : MonoBehaviour {
                     this.transform.Translate(Vector3.up * (Time.deltaTime * speed), Space.World);
                 }
 
-                if (m_liftState.Equals(LiftState.Down) && this.transform.position.y > BOTTOM) {
+                if (m_liftState.Equals(LiftState.Down) && this.transform.position.y > bottom) {
                     this.transform.Translate(Vector3.down * (Time.deltaTime * speed), Space.World);
                 }
             }

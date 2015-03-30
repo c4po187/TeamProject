@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System;
 
@@ -20,6 +21,10 @@ public enum DynamicState {
     Moving
 }
 
+/*
+ * Will be useful if we require a dynamic block
+ * that traverses more than one axis.
+ */
 [Flags]
 public enum DynamicAxis { 
     _Undef = 0x0,
@@ -37,8 +42,8 @@ public class DynamicBlock : MonoBehaviour {
     #region Members
 
     public Vector3 startPosition, endPosition;
-    public float delay;
-    public float speed;
+    public float delay, speed;
+
     private Stopwatch m_timer;
     private DynamicDirection m_dDir;
     private DynamicState m_dState;
