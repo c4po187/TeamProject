@@ -46,17 +46,26 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\MoveCamera.cs" />
      <Compile Include="Assets\Scripts\Ball\Controls.cs" />
      <Compile Include="Assets\Scripts\Button.cs" />
      <Compile Include="Assets\Scripts\Main\Entry.cs" />
+     <Compile Include="Assets\Scripts\Main\MoveCamera.cs" />
+     <Compile Include="Assets\Scripts\Map.cs" />
+     <Compile Include="Assets\Scripts\MeshParticleRenderer.cs" />
      <Compile Include="Assets\Scripts\Obstacles\ColourChange.cs" />
      <Compile Include="Assets\Scripts\Obstacles\ColourSwitchParticles.cs" />
+     <Compile Include="Assets\Scripts\Obstacles\DoorTrigger.cs" />
+     <Compile Include="Assets\Scripts\Obstacles\DynamicBlock.cs" />
      <Compile Include="Assets\Scripts\Obstacles\GateScript.cs" />
+     <Compile Include="Assets\Scripts\Obstacles\Lift.cs" />
      <Compile Include="Assets\Scripts\Obstacles\MagStrip.cs" />
      <Compile Include="Assets\Scripts\Obstacles\PushBlock.cs" />
+     <Compile Include="Assets\Scripts\Pendulum.cs" />
+     <Compile Include="Assets\Scripts\ReadOnly.cs" />
      <Compile Include="Assets\Scripts\Room\Room.cs" />
      <Compile Include="Assets\Scripts\Room\Wall.cs" />
+     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
+     <Compile Include="Assets\Scripts\Traps\AcidBath.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

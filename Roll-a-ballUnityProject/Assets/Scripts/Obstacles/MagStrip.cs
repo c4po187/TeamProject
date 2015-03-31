@@ -20,8 +20,8 @@ public class MagStrip : MonoBehaviour {
 
     #region Members
 
-    private const long POS_DURATION = 10000;  // 10 Seconds
-    private const long DELAY = 100;           // 10th Of a second       
+    private const long POS_DURATION = 10000;  
+    private const long DELAY = 100;              
     private Stopwatch m_timer, m_delayTimer;
     private ContactPoint m_contact;
     private bool mb_isRepel;
@@ -46,7 +46,7 @@ public class MagStrip : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () {  
         if (m_timer.IsRunning) {
             if (m_timer.ElapsedMilliseconds >= POS_DURATION) {
                 m_timer.Reset();
@@ -65,13 +65,32 @@ public class MagStrip : MonoBehaviour {
         }
     }
 
+    void FixedUpdate() {
+        if (StripPolarity.Equals(Polarity.Positive)) {
+            this.GetComponent<WindZone>().windMain = 2.5f;
+            this.GetComponent<WindZone>().windTurbulence = 1f;
+            ParticleSystem.Particle[] particles =
+                new ParticleSystem.Particle[this.GetComponent<ParticleSystem>().maxParticles];
+            this.GetComponent<ParticleSystem>().GetParticles(particles);
+            for (int i = 0; i < particles.Length; ++i) {
+                particles[i].color = new Color32((byte)12, (byte)82, (byte)144, (byte)180);
+            }
+            this.GetComponent<ParticleSystem>().SetParticles(particles, particles.Length);
+        }
+        else {
+            this.GetComponent<WindZone>().windMain = 0f;
+            this.GetComponent<WindZone>().windTurbulence = 0f;
+        } 
+    }
+
     public void ModifyPolarity(Polarity polarity) {
         StripPolarity = polarity;
+        if (polarity.Equals(Polarity.Positive))
+            m_timer.Start();
     }
 
     void OnCollisionEnter(Collision other) {
         if (other.gameObject.tag.Equals("Player")) {
-            m_timer.Start();
             m_contact = other.contacts[0];
         }
             

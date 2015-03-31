@@ -10,7 +10,7 @@ public class ColourChange : MonoBehaviour {
 		switch (colour)
 		{
 		case "Orange":
-                this.GetComponent<Renderer>().material.color = Color.Lerp(Color.yellow, Color.red, 0.5f);
+            this.GetComponent<Renderer>().material.color = Color.Lerp(Color.yellow, Color.red, 0.5f);
 			break;
 
 		case "Candy":
@@ -21,10 +21,5 @@ public class ColourChange : MonoBehaviour {
 			this.GetComponent<Renderer>().material.color = Color.green;
 			break;
 		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }
