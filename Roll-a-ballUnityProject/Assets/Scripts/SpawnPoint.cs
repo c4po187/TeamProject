@@ -50,7 +50,7 @@ public class SpawnPoint : MonoBehaviour {
 
     #region Functions
 
-    void Start() {
+    void Awake() {
         try {
             actor = this.gameObject;
         }
@@ -66,7 +66,7 @@ public class SpawnPoint : MonoBehaviour {
         GameObject[] floors = GameObject.FindGameObjectsWithTag("ground");
         foreach (var f in floors) {
             if (f.GetComponent<Collider>().bounds.Intersects(actor.GetComponent<Collider>().bounds)) {
-                m_currentRoom = f.transform.parent.parent.parent.gameObject;
+                m_currentRoom = f.transform.root.gameObject;
                 break;
             }
         }

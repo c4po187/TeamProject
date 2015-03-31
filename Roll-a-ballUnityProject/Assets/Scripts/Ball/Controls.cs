@@ -70,7 +70,7 @@ public class Controls : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		//Physics.gravity.Set(0.0f,-1000f,0.0f);
+        //Physics.gravity.Set(0.0f,-1000f,0.0f);
         maxSpeed = 10f;
         BallRelativity = Relativity.Ground;
         WallDirectional = Vector3.zero;
@@ -86,6 +86,13 @@ public class Controls : MonoBehaviour {
         /* TODO: 
          * We need to implement a means of determining which room we're in, 
          * rather than this hardcode style.
+         * 
+         * NOTE:
+         * As long as we are using this, you must also place the ball in the
+         * same room as defined here, for the spawn initial detection.
+         * If you don't, it'll all go pear-shaped once you fall into a trap.
+         * * I say once, because you will (you'd better; otherwise this
+         * game is too easy).
          */
         PreviousRoom = CurrentRoom = "Room_1";
         this.transform.position = GetComponent<SpawnPoint>().GetLocationFrom(CurrentRoom);
