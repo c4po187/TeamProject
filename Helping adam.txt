@@ -1,0 +1,28 @@
+How to set up your desktop and make sure you have the latest version on it.
+
+Start from scratch
+on your desktop delete the existing local folder for the repository
+	- I imagine its Documents/GitHub/TeamProject	delete that
+navigate back to the GitHub folder
+open git shell and type "git clone https://github.com/wolfinstien/TeamProject.git"
+this will give you a fresh version of YOUR coopy of the respository
+next navigate to the team project folder
+	- cd TeamProject
+you need to set up the upstream
+type "git remote add upstream https://github.com/PixelKnot/TeamProject.git"
+now should be done :) not so hard really
+
+Using Git
+your end
+- before doing any work type "git pull" to make sure you have the latest version of Your repository
+- do work make changes etc.
+- type "git add -A" to apply all the changes youve made
+- type "git commit" to save them, wait for notepad to open and type your comment then alt + F4 and save it
+- "git push" will add it to YOUR online repository
+If I have made changes to the master (which is quite often)
+- "git pull upstream master" will pull my changes to your local clone of your respository (IIRC)
+When you are happy that changes you have made can be added to the master
+- go to GitHub.com
+- find the master respository (my one)
+- create a pull request, when I see it I will pull it in.
+- NB please do this often with little changes (like one or 2 scripts) as it reduces the amount of merge conlicts at any one time. Also please provide detailed comments so I dont have to keep trying to work out what the changes do.

@@ -1,0 +1,46 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#	modified:   Roll-a-ballUnityProject/Assembly-CSharp-vs.csproj
+#	modified:   Roll-a-ballUnityProject/Assembly-CSharp.csproj
+#	modified:   Roll-a-ballUnityProject/Assets/ExampleLevel.unity
+#	new file:   Roll-a-ballUnityProject/Assets/Scripts/Obstacles.meta
+#	new file:   Roll-a-ballUnityProject/Assets/Scripts/Obstacles/PushBlock.cs
+#	new file:   Roll-a-ballUnityProject/Assets/Scripts/Obstacles/PushBlock.cs.meta
+#	modified:   Roll-a-ballUnityProject/Library/AssetServerCacheV3
+#	modified:   Roll-a-ballUnityProject/Library/CurrentLayout.dwlt
+#	modified:   Roll-a-ballUnityProject/Library/InspectorExpandedItems.asset
+#	modified:   Roll-a-ballUnityProject/Library/ScriptAssemblies/Assembly-CSharp.dll
+#	modified:   Roll-a-ballUnityProject/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb
+#	modified:   Roll-a-ballUnityProject/Library/ScriptMapper
+#	modified:   Roll-a-ballUnityProject/Library/assetDatabase3
+#	modified:   Roll-a-ballUnityProject/Library/expandedItems
+#	modified:   Roll-a-ballUnityProject/Library/guidmapper
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000001000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000002000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000003000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000004000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000004100000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000005000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000005100000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000006000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000006100000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000007000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000008000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/00000000000000009000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/0000000000000000a000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/0000000000000000b000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/00/0000000000000000c000000000000000
+#	modified:   Roll-a-ballUnityProject/Library/metadata/78/78c73fab6792a204cb850467e5e34c69
+#	deleted:    Roll-a-ballUnityProject/Library/metadata/80/80a3616ca19596e4da0f10f14d241e9f
+#	modified:   Roll-a-ballUnityProject/Library/metadata/b0/b006660308196dc45a901f2ce5321556
+#	modified:   Roll-a-ballUnityProject/Library/metadata/f1/f198216441e9a7c479bcf5c31afe3f8c
+#	deleted:    Roll-a-ballUnityProject/Library/metadata/f5/f5f67c52d1564df4a8936ccd202a3bd8
+#	modified:   Roll-a-ballUnityProject/ProjectSettings/Physics2DSettings.asset
+#	modified:   Roll-a-ballUnityProject/Roll-a-ballUnityProject-csharp.sln
+#	modified:   Roll-a-ballUnityProject/Roll-a-ballUnityProject.sln
+#	modified:   Roll-a-ballUnityProject/Roll-a-ballUnityProject.userprefs
+#
+
