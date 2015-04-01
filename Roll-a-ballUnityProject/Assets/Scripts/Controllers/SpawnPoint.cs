@@ -37,6 +37,8 @@ public class SpawnPoint : MonoBehaviour {
 
     #region Members
 
+    private const float STEP = 20f;
+
     private GameObject m_currentRoom;
     public GameObject actor;
     public string actorTag;
@@ -138,6 +140,37 @@ public class SpawnPoint : MonoBehaviour {
     public void Respawn(float x, float y, float z) {
         actor.transform.position = new Vector3(x, y, z);
     }
+
+    public bool ApplyLocationTransformation(string key, Vector3 direction, bool applyToChildren) {
+        bool loc_transformed = false;
+        bool obj_transformed = false;
+
+        if (nodes.Count == 0 &&
+            (direction.Equals(Vector3.up) || direction.Equals(Vector3.down) ||
+            direction.Equals(Vector3.left) || direction.Equals(Vector3.right))) {
+            return false;
+        } else {
+            nodes.Find(x => x.key.Equals(key)).location =
+                (nodes.Find(x => x.key.Equals(key)).location + (direction * STEP));
+            loc_transformed = true;
+            if (applyToChildren) {
+                if (GameObject.Find(key)) {
+                    foreach (Transform child in GameObject.Find(key).transform) {
+                        child.position = (child.position + (direction * STEP));                    
+                    }
+                    obj_transformed = true;
+                }
+            }
+        }
+
+        // Finally
+        if (applyToChildren)
+            return loc_transformed && obj_transformed;
+        else
+            return loc_transformed;
+    }
+
+
 
     #endregion
 }
