@@ -6,6 +6,18 @@ using System.Diagnostics;
 
 #endregion
 
+/*
+ * TODO:
+ * We need to implement some sort of penalty system,
+ * which we can inflict upon the player if they do 
+ * happen to fall into this here trap.
+ * We could use it for other things we deem as a
+ * penalty also.
+ * 
+ * Perhaps a separate class somewhere that is 
+ * either static or follows the singleton pattern?
+ */
+
 public class AcidBath : MonoBehaviour {
 
     #region Members
